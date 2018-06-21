@@ -1,4 +1,0 @@
-CS?,Catalog Name,Spec,Primary Hierarchy,Secondary Hierarchies,Inherit?,Display Attribute,ACG,Links,Locations,Scripts
-
-,NewRef_Agent,SpecCtg_NewRef_Agent,H_000_Generique,,no,SpecCtg_NewRef_Agent/ID_AGENT,ACG_Metier,,,"SCRIPT_NAME|CtgPostProcScript_NewRef_Agent,POST_SAVE_SCRIPT_NAME|CtgPostSaveScript_NewRef_Agent"
-,NewRef_Etablissement,SpecCtg_NewRef_Etablissement,H_000_Generique,,no,SpecCtg_NewRef_Etablissement/ID_ETABLISSEMENT,ACG_Metier,,,"SCRIPT_NAME|CtgPostProcScript_NewRef_Etablissement,POST_SAVE_SCRIPT_NAME|CtgPostSaveScript_NewRef_Etablissement"

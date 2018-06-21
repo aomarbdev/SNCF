@@ -1,7 +1,0 @@
-function affecteLkpScripts() {
-
-	getScriptByPath("/scripts/triggers/TriggerScript_AffectePostProcLkps").getFunctionByName("doAffecteLkpScripts").invoke();
-	getScriptByPath("/scripts/triggers/TriggerScript_AffectePostSaveLkps").getFunctionByName("doAffecteLkpScripts").invoke();
-}
-
-affecteLkpScripts();
