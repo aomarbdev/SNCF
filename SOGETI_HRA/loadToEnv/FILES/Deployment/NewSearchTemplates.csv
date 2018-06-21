@@ -1,0 +1,4 @@
+CS?,New Search Template Name,Container Type,Container Name,Type,Default,Template User,Description,Search Scope,Sort Type,Sort Attribute Path,Reserved by,Collab Area Name,Step Name,Category Restriction,Save Parameters,Attribute Path,Negate,Search operator,Value,Second Value,Logical Operator,Category Filter,English
+
+,HRA_Agent,CATALOG,HRA_Agent,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_HRA_Agent/ID_AGENT,,EQUAL,,,AND,,
+,HRA_Agent,CATALOG,HRA_Agent,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_HRA_Agent/NOM,,EQUAL,,,AND,,

@@ -1,0 +1,154 @@
+// InfoSphere MDM Collaboration Server ASP/JSP Script
+
+//201806 - SERRA - Sample script to login to MDM-CE Classic UI, then invoke a trigger script and display answer
+
+//@param s string
+function log(s){
+	getLogger("WFL").loggerInfo(checkString(s,""));
+}
+//@param hmResponse http response HM
+function getHeader(hmResponse){
+	var resHeader = hmResponse["RESPONSE_HEADER_FIELDS"];
+	return resHeader;
+}
+
+//@param in reader
+function read(in){
+	var out = "";
+	var line;
+	forEachLine(in,line){
+		out = concat(out,line);
+	}
+	return out;
+}
+	
+//@param hmResponse http response HM
+function getBody(hmResponse){
+	return read(hmResponse["RESPONSE_READER"]);
+}
+//@param sUrl target url
+//@param hmHeaders http header
+//@param hmParams http parameters
+function get(sUrl,hmHeaders,hmParams){
+	var sRequestMethod = "GET";//get/post
+	var hmResponse = getFullHTTPResponse(sUrl,hmHeaders,hmParams,sRequestMethod);
+	return hmResponse;
+}
+
+//login to classic UI
+//@param sHRAhost hra hostname or ip
+function login(sHRAhost){
+	var sUrl = concat("http://",sHRAhost,":7507/utils/enterLogin.jsp");//?doit=chk_login&username=Admin&password=trinitron&company_code=diapason";
+	var hmHeaders = [];//headers
+	var hmParameters = [];//body params
+	hmParameters["doit"]="chk_login";
+	hmParameters["username"]="Admin";
+	hmParameters["password"]="trinitron";
+	hmParameters["company_code"]="HRA";
+	var response = get(sUrl,hmHeaders,hmParameters);
+	var sCookie = getHeader(response)["Set-Cookie"];
+	return sCookie;//Get the cookie to give back as header 'Cookie'
+}
+
+//@param sBody body of ws answer
+//@param oItem item
+function decodeXML(sBody, oItem){
+	var hmAttributesToSet= [];
+	hmAttributesToSet["NOM"]=true;
+	hmAttributesToSet["PRENOM"]=true;
+	hmAttributesToSet["GRADE"]=true;
+	hmAttributesToSet["DD_GRADE"]=true;
+	hmAttributesToSet["DF_GRADE"]=true;
+	hmAttributesToSet["CODE_NIVEAU"]=true;
+	hmAttributesToSet["DD_NIVEAU"]=true;
+	hmAttributesToSet["DF_NIVEAU"]=true;
+	hmAttributesToSet["CODE_QUALIFICATION"]=true;
+	hmAttributesToSet["DD_QUALIFICATION"]=true;
+	hmAttributesToSet["DF_QUALIFICATION"]=true;
+	hmAttributesToSet["CODE_POSITION"]=true;
+	hmAttributesToSet["DD_POSITION"]=true;
+	hmAttributesToSet["DF_POSITION"]=true;
+	hmAttributesToSet["CODE_ECHELON"]=true;
+	hmAttributesToSet["DD_ECHELON"]=true;
+	hmAttributesToSet["DF_ECHELON"]=true;
+	hmAttributesToSet["REGIME_TRAVAIL"]=true;
+	hmAttributesToSet["ASSERMENTATION"]=true;
+	hmAttributesToSet["ID_ETABLISSEMENT"]=true;
+	hmAttributesToSet["DD_ETABLISSEMENT"]=true;
+	hmAttributesToSet["DF_ETABLISSEMENT"]=true;
+	hmAttributesToSet["ID_UO"]=true;
+	hmAttributesToSet["DD_UO"]=true;
+	hmAttributesToSet["DF_UO"]=true;
+
+	var oXmlDoc = new XmlDocument(sBody);
+	var oErrorNode = oXmlDoc.getXMLNode("error");//dont use root body node
+	//log(concat("oErrorNode:",oErrorNode));
+	if(oErrorNode != null){
+		log(concat("Error:",oErrorNode.getXMLNodeValue("")));
+		return false;
+	}else{//OK
+		var oItemNode = oXmlDoc.getXMLNode("item");//dont use root body node
+		log(concat("pk:",oItemNode.getXMLNodeValue("pk")));
+		log(concat("display:",oItemNode.getXMLNodeValue("displayName")));
+		var oAttributesNode = oItemNode.getXMLNode("attributes");//dont use root body node
+		var oAttrNode;
+		forEachXMLNode(oAttributesNode,"attribute",oAttrNode){
+			var sPath = replaceString(oAttrNode.getXMLNodeValue("path"), "_HRA_", "_NewRef_");
+			var sAttrName = getNameFromPath(sPath,"/");
+			if(hmAttributesToSet.containsKey(sAttrName)){
+				var sValue = oAttrNode.getXMLNodeValue("value");
+				log(concat("Setting ",sPath," to ",sValue));
+				oItem.setEntryAttrib(sPath,sValue);
+			}
+		}
+		log(concat("Saving item ",oItem.getPrimaryKey(),":",oItem.saveCtgItem()));
+		return true;
+	}
+}
+
+//@param sHRAhost hra hostname or ip
+//@param sCtg catalog name
+//@param oEntry item
+function call(sHRAhost,sCtg,oEntry){
+	var sCookie = login(sHRAhost);
+	log(concat("login cookie:",sCookie));
+	var sUrl = concat("http://",sHRAhost,":7507/utils/invoker.jsp");
+	var hmHeaders = [];//headers
+	hmHeaders["Cookie"]=sCookie;
+	var hmParameters = [];//body params
+	hmParameters["script"]="getItem";
+	hmParameters["invoking_user"]="Admin/HRA";
+	hmParameters["bUserOutput"]="false";
+	hmParameters["catalog"]=sCtg;
+	var sPk = oEntry.getPrimaryKey();
+	hmParameters["pk"]=sPk;
+	var response = get(sUrl,hmHeaders,hmParameters);
+	var sHeader = getHeader(response);
+	log(concat("Response Header:",sHeader));
+	var sBody = getBody(response);
+	log(concat("Response Body:",sBody));
+	return decodeXML(sBody, oEntry);
+}
+
+
+function IN(entrySet, colArea, workflow, step, stepPath){
+	 log(concat("==============> dans IN ",stepPath));
+}
+
+function OUT(entrySet, colArea, workflow, step, stepPath){  
+	 log(concat("==============> dans OUT ",stepPath));
+	 log(concat("entrySet:",entrySet));
+	 var oEntry = null;
+	 forEachEntrySetElement(entrySet, oEntry){
+		log(concat("Traitement item: ",oEntry.getPrimaryKey()));
+		var bExist = call("10.145.132.232","HRA_Agent",oEntry);//catalog, pk
+		if(bExist){
+			oEntry.setExitValue("DONE");
+		}else{//KO - doesnt exist in HRA or ERROR
+			oEntry.setExitValue("FIXIT");
+		}
+	 }
+}
+
+function TIMEOUT(entrySet, colArea, workflow, step, stepPath){
+}

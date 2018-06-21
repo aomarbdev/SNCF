@@ -1,0 +1,7 @@
+CS?,New Search Template Name,Container Type,Container Name,Type,Default,Template User,Description,Search Scope,Sort Type,Sort Attribute Path,Reserved by,Collab Area Name,Step Name,Category Restriction,Save Parameters,Attribute Path,Negate,Search operator,Value,Second Value,Logical Operator,Category Filter,English
+
+,NewRef_Agent,CATALOG,NewRef_Agent,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_NewRef_Agent/ID_AGENT,,EQUAL,,,AND,,
+,NewRef_Agent,CATALOG,NewRef_Agent,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_NewRef_Agent/FAMILLE,,EQUAL,,,AND,,
+
+,NewRef_Etablissement,CATALOG,NewRef_Etablissement,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_NewRef_Etablissement/ID_ETABLISSEMENT,,EQUAL,,,AND,,
+,NewRef_Etablissement,CATALOG,NewRef_Etablissement,TEMPLATE,t,Admin,,ENTIRE_CATALOG,ASCENDING,,,,,,,SpecCtg_NewRef_Etablissement/LIB_COURT_ETABLISSEMENT,,EQUAL,,,AND,,

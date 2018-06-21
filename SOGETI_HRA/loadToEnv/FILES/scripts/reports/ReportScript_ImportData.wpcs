@@ -1,0 +1,15 @@
+
+/// Exécute le script du report ImportData
+//:GLFUNCTION void doReport()
+function doReport() {
+
+	var sPATH_DELIM	= "/";
+	var sPath = "/IMPORT/"; 
+	var arrayDocsPath = getDocStoreFilesInDirectory(sPath);
+	var doc = getDocByPath(arrayDocsPath[0]);
+	var sNomFichier = getNameFromPath(arrayDocsPath[0],sPATH_DELIM);
+	getScriptByPath("/scripts/triggers/TriggerScript_ImportData").getFunctionByName("doImport").invoke(doc);
+}
+			
+/// Exécute le script du report
+doReport();

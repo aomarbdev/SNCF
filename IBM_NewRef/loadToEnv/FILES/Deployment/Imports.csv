@@ -1,0 +1,6 @@
+,Import Name,Catalog Name,Hierarchy Name,Import Type,Import Semantic,Character Set,File Spec Name,Spec Map Name,Data Source Name,Import Script Name,ACG,Is collaboration area?,Workflow Step Path,Approval User,Parameters Name
+,NewRef_Agent,NewRef_Agent,,ITM,U,UTF-8,Dummy_File_Spec,,Manually,Import_Agent_NewRef,$DEFAULT,,,,
+,HRA_Agent,HRA_Agent,,ITM,U,UTF-8,Dummy_File_Spec,,Manually,Import_Agent_HRA,$DEFAULT,,,,
+,NewRef_Etablissement,NewRef_Etablissement,,ITM,U,UTF-8,Dummy_File_Spec,,Manually,Import_Etablissement_NewRef,$DEFAULT,,,,
+,HRA_Etablissement,HRA_Etablissement,,ITM,U,UTF-8,Dummy_File_Spec,,Manually,Import_Etablissement_HRA,$DEFAULT,,,,
+

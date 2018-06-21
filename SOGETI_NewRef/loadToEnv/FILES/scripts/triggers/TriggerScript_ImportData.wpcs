@@ -1,0 +1,629 @@
+/// @file TriggerScript_ImportNINIV.wpcs
+/// Script de l'import Data
+/// @author Grégory DARIDE
+
+var charSet = "UTF-8";
+var outPutFichier;
+var pathFichierLog;
+var nomFichierLog;
+var extensionFichierLog = ".log";
+
+/// Transforme un string en date
+///@param sDate : string à transformer
+//:GLFUNCTION date stringToDate(sDate)
+function stringToDate(sDate)
+{	
+	var sDATE_FORMAT = "yyyyMMdd";
+	if (sDate != null) 
+	{
+		dDate = new Date(sDATE_FORMAT,sDate);
+	}
+	return dDate;
+}
+
+
+function importAgentsNewRef(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "AgentsNewRef" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var NUM_CP = asValues[0];
+			var FAMILLE = asValues[22];
+			var DD_FAMILLE = asValues[23];
+			var DF_FAMILLE = asValues[24];
+			var TYPOLOGIE_AGENT = asValues[25];
+			var DD_TYPOLOGIE_AGENT = asValues[26];
+			var DF_TYPOLOGIE_AGENT = asValues[27];
+			var EQUIPE = asValues[28];
+			var DD_EQUIPE = asValues[29];
+			var DF_EQUIPE = asValues[30];
+			var RESIDENCE = asValues[31];
+			var DD_RESIDENCE = asValues[32];
+			var DF_RESIDENCE = asValues[33];
+			var DD_PRODUCTION = asValues[34];
+			var COMPETENCE_LANGUE_1 = asValues[35];
+			var DD_COMPETENCE_LANGUE_1 = asValues[36];
+			var DF_COMPETENCE_LANGUE_1 = asValues[37];
+			var COMPETENCE_LANGUE_2 = asValues[38];
+			var DD_COMPETENCE_LANGUE_2 = asValues[39];
+			var DF_COMPETENCE_LANGUE_2 = asValues[40];
+			var COMPETENCE_TRAIN_1 = asValues[41];
+			var DD_COMPETENCE_TRAIN_1 = asValues[42];
+			var DF_COMPETENCE_TRAIN_1 = asValues[43];
+			var COMPETENCE_TRAIN_2 = asValues[44];
+			var DD_COMPETENCE_TRAIN_2 = asValues[45];
+			var DF_COMPETENCE_TRAIN_2 = asValues[46];
+			var COMPETENCE_TRACTION_1 = asValues[47];
+			var DD_COMPETENCE_TRACTION_1 = asValues[48];
+			var DF_COMPETENCE_TRACTION_1 = asValues[49];
+			var POINT_DE_VENTE = asValues[50];
+			var NUM_RECETTE = asValues[51];
+			var TEL_COMPLEMENTAIRE = asValues[52];
+			
+			var sCtgNameNewRefAgent = "NewRef_Agent";
+			var entryAgentCreation = new CtgItem(sCtgNameNewRefAgent);
+			
+			if (entryAgentCreation != null) {
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/ID_AGENT", NUM_CP);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/FAMILLE", FAMILLE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_FAMILLE", stringToDate(DD_FAMILLE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_FAMILLE", stringToDate(DF_FAMILLE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/TYPOLOGIE_AGENT", TYPOLOGIE_AGENT);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_TYPOLOGIE_AGENT", stringToDate(DD_TYPOLOGIE_AGENT));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_TYPOLOGIE_AGENT", stringToDate(DF_TYPOLOGIE_AGENT));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/EQUIPE", EQUIPE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_EQUIPE", stringToDate(DD_EQUIPE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_EQUIPE", stringToDate(DF_EQUIPE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/RESIDENCE", RESIDENCE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_RESIDENCE", stringToDate(DD_RESIDENCE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_RESIDENCE", stringToDate(DF_RESIDENCE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_PRODUCTION", stringToDate(DD_PRODUCTION));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/COMPETENCE_LANGUE_1", COMPETENCE_LANGUE_1);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_COMPETENCE_LANGUE_1", stringToDate(DD_COMPETENCE_LANGUE_1));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_COMPETENCE_LANGUE_1", stringToDate(DF_COMPETENCE_LANGUE_1);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/COMPETENCE_LANGUE_2", COMPETENCE_LANGUE_2);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_COMPETENCE_LANGUE_2", stringToDate(DD_COMPETENCE_LANGUE_2));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_COMPETENCE_LANGUE_2", stringToDate(DF_COMPETENCE_LANGUE_2));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/COMPETENCE_TRAIN_1", COMPETENCE_TRAIN_1);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_COMPETENCE_TRAIN_1", stringToDate(DD_COMPETENCE_TRAIN_1));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_COMPETENCE_TRAIN_1", stringToDate(DF_COMPETENCE_TRAIN_1));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/COMPETENCE_TRAIN_2", COMPETENCE_TRAIN_2);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_COMPETENCE_TRAIN_2", stringToDate(DD_COMPETENCE_TRAIN_2));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/COMPETENCE_TRACTION_1", COMPETENCE_TRACTION_1);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DD_COMPETENCE_TRACTION_1", stringToDate(DD_COMPETENCE_TRACTION_1));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/DF_COMPETENCE_TRACTION_1", stringToDate(DF_COMPETENCE_TRACTION_1));
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/POINT_DE_VENTE", POINT_DE_VENTE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/NUM_RECETTE", NUM_RECETTE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_NewRef_Agent/TEL_COMPLEMENTAIRE", TEL_COMPLEMENTAIRE);
+
+				var errEntryCSCreation = entryAgentCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne = numeroLigne +1;
+	}
+}
+
+function importEtablissementsNewRef(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "EtablissementsNewRef" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroligne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_ETABLISSEMENT = asValues[0];
+			var LIB_COURT_ETABLISSEMENT = asValues[1];
+			var TRIGRAMME_ETABLISSEMENT = asValues[2];
+			var CATEGORIE_ETABLISSEMENT = asValues[3];
+
+			
+			var sCtgNameNewRefEtablissement = "NewRef_Etablissement";
+			var entryCreation = new CtgItem(sCtgNameNewRefEtablissement);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecCtg_NewRef_Etablissement/ID_ETABLISSEMENT", ID_ETABLISSEMENT);
+				entryCreation.setEntryAttrib("SpecCtg_NewRef_Etablissement/LIB_COURT_ETABLISSEMENT", LIB_COURT_ETABLISSEMENT);
+				entryCreation.setEntryAttrib("SpecCtg_NewRef_Etablissement/TRIGRAMME_ETABLISSEMENT", TRIGRAMME_ETABLISSEMENT);
+				entryCreation.setEntryAttrib("SpecCtg_NewRef_Etablissement/CATEGORIE_ETABLISSEMENT", CATEGORIE_ETABLISSEMENT);
+	
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importResidencesNewRef(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "ResidencesNewRef" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_RESIDENCE = asValues[0];
+			var LIBELLE_RESIDENCE = asValues[1];
+			var ID_ETAB_RATTACHEMENT = asValues[2];
+			
+			var slkp = "Lkp_NewRef_Residence";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_Residence/ID_RESIDENCE", ID_RESIDENCE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_Residence/LIBELLE_RESIDENCE", LIBELLE_RESIDENCE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_Residence/ID_ETAB_RATTACHEMENT", ID_ETAB_RATTACHEMENT);
+	
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importUONewRef(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "UONewRef" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_UO = asValues[0];
+
+			var slkp = "Lkp_NewRef_UO";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_UO/ID_UO", ID_UO);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importCompetencesLangues(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "CompetencesLangues" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var CODE_LANGUE = asValues[0];
+			var LIBELLE_LANGUE = asValues[1];
+			var DDV_LANGUE = asValues[2];
+			var DFV_LANGUE = asValues[3];
+			
+			var slkp = "Lkp_NewRef_CompetenceLangues";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceLangues/CODE_LANGUE", CODE_LANGUE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceLangues/LIBELLE_LANGUE", LIBELLE_LANGUE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceLangues/DDV_LANGUE", stringToDate(DDV_LANGUE));
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceLangues/DFV_LANGUE", stringToDate(DFV_LANGUE));
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importCompetencesTrains(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "CompetencesTrains" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var CODE_TRAIN = asValues[0];
+			var LIBELLE_TRAIN = asValues[1];
+			var DDV_TRAIN = asValues[2];
+			var DFV_TRAIN = asValues[3];
+			
+			var slkp = "Lkp_NewRef_CompetenceTrain";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTrain/CODE_TRAIN", CODE_TRAIN);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTrain/LIBELLE_TRAIN", LIBELLE_TRAIN);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTrain/DDV_TRAIN", stringToDate(DDV_TRAIN));
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTrain/DFV_TRAIN", stringToDate(DFV_TRAIN));
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}	
+		
+		numeroLigne++;
+	}
+}
+
+function importCompetencesTractions(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "CompetencesTractions" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var CODE_TRACTION = asValues[0];
+			var LIBELLE_TRACTION = asValues[1];
+			var DDV_TRACTION = asValues[2];
+			var DFV_TRACTION = asValues[3];
+			
+			var slkp = "Lkp_NewRef_CompetenceTraction";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTraction/CODE_TRACTION", CODE_TRACTION);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTraction/LIBELLE_TRACTION", LIBELLE_TRACTION);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTraction/DDV_TRACTION", stringToDate(DDV_TRACTION));
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CompetenceTraction/DFV_TRACTION", stringToDate(DFV_TRACTION));
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importEquipeTrain(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "EquipeTrain" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_EQUIPE_TRAIN = asValues[0];
+			var LIBELLE_EQUIPE_TRAIN = asValues[1];
+			var ID_UO = asValues[2];
+			var RET_NUM_CP = asValues[3];
+			var DATE_DEBUT_AFFECTATION = asValues[4];
+			var DATE_FIN_AFFECTATION = asValues[5];
+			
+			var slkp = "Lkp_NewRef_EquipeTrain";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/ID_EQUIPE_TRAIN", ID_EQUIPE_TRAIN);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/LIBELLE_EQUIPE_TRAIN", LIBELLE_EQUIPE_TRAIN);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/ID_UO", ID_UO);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/RET_NUM_CP", RET_NUM_CP);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/DATE_DEBUT_AFFECTATION", stringToDate(DATE_DEBUT_AFFECTATION));
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTrain/DATE_FIN_AFFECTATION", stringToDate(DATE_FIN_AFFECTATION));
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importEquipeTraction(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "EquipeTraction" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_EQUIPE_TRACTION = asValues[0];
+			var LIBELLE_EQUIPE_TRACTION = asValues[1];
+			var ID_UO = asValues[2];
+			var CTT_NUM_CP = asValues[3];
+			var DATE_DEBUT_AFFECTATION = asValues[4];
+			var DATE_FIN_AFFECTATION = asValues[5];
+			
+			var slkp = "Lkp_NewRef_EquipeTraction";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/ID_EQUIPE_TRACTION", ID_EQUIPE_TRACTION);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/LIBELLE_EQUIPE_TRACTION", LIBELLE_EQUIPE_TRACTION);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/ID_UO", ID_UO);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/CTT_NUM_CP", CTT_NUM_CP);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/DATE_DEBUT_AFFECTATION", stringToDate(DATE_DEBUT_AFFECTATION));
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_EquipeTraction/DATE_FIN_AFFECTATION", stringToDate(DATE_FIN_AFFECTATION));
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}	
+		
+		numeroLigne++;
+	}
+}
+
+function importFamilleAgent(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "FamilleAgent" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var CODE_FAMILLE = asValues[0];
+			var LIBELLE_FAMILLE = asValues[1];
+			
+			var slkp = "Lkp_NewRef_FamilleAgent";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_FamilleAgent/CODE_FAMILLE", CODE_FAMILLE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_FamilleAgent/LIBELLE_FAMILLE", LIBELLE_FAMILLE);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importNumRecette(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "NumRecette" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_POINT_DE_VENTE = asValues[0];
+			var NUM_RECETTE = asValues[1];
+			var NUM_CP = asValues[2];
+			
+			var slkp = "Lkp_NewRef_NumRecette";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_NumRecette/ID_POINT_DE_VENTE", ID_POINT_DE_VENTE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_NumRecette/NUM_RECETTE", NUM_RECETTE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_NumRecette/NUM_CP", NUM_CP);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importPointDeVente(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "PointDeVente" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_POINT_DE_VENTE = asValues[0];
+			var LIBELLE_POINT_DE_VENTE = asValues[1];
+			
+			var slkp = "Lkp_NewRef_PointdeVente";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_PointDeVente/ID_POINT_DE_VENTE", ID_POINT_DE_VENTE);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_PointDeVente/LIBELLE_POINT_DE_VENTE", LIBELLE_POINT_DE_VENTE);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}	
+		
+		numeroLigne++;
+	}
+}
+
+function importTypologieAgent(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "TypologieAgent" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var CODE_TYPOLOGIE_AGENT = asValues[0];
+			var LIBELLE_TYPOLOGIE_AGENT = asValues[1];
+			
+			var slkp = "Lkp_NewRef_TypologieAgent";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_TypologieAgent/CODE_TYPOLOGIE_AGENT", CODE_TYPOLOGIE_AGENT);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_TypologieAgent/LIBELLE_TYPOLOGIE_AGENT", LIBELLE_TYPOLOGIE_AGENT);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}	
+		
+		numeroLigne++;
+	}
+}
+
+function importCategorieEtablissement(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "Categorie Etablissement" + ".csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_CATEGORIE_ETABLISSEMENT = asValues[0];
+			var LIBELLE_CATEGORIE_ETABLISSEMENT = asValues[1];
+			
+			var slkp = "Lkp_NewRef_CategorieEtablissement";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CategorieEtablissement/ID_CATEGORIE_ETABLISSEMENT", ID_CATEGORIE_ETABLISSEMENT);
+				entryCreation.setEntryAttrib("SpecLkp_NewRef_CategorieEtablissement/LIBELLE_CATEGORIE_ETABLISSEMENT", LIBELLE_CATEGORIE_ETABLISSEMENT);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+/// Exécute le script d'import
+/// @param doc chemin du fichier de data NewRef
+//:GLFUNCTION void doImport(doc)
+function doImport(doc)
+{
+	
+	var sDATE_FORMAT = "dd/MM/yyyy";
+	var dToday = today().formatDate("ddMMyy_HHmmss");
+	var erreur = null;	
+	var sDossierTravail = "/IMPORT/TRAVAIL/";
+
+	// Dézipper le fichier Fichier.zip dans le répertoire de travail
+	var docPath = doc.getDocPath();
+	var docName = getNameFromPath(docPath);		
+	
+	//Copie du fichier dans l'environnement TRAVAIL
+	doc.copyDoc(sDossierTravail);
+	//Unzip du fichier
+	unzip(sDossierTravail + docName, sDossierTravail);
+
+	importAgentsNewRef(sDossierTravail);
+	importEtablissementsNewRef(sDossierTravail);
+	importResidencesNewRef(sDossierTravail);
+	importUONewRef(sDossierTravail);
+	importCompetencesLangues(sDossierTravail);
+	importCompetencesTrains(sDossierTravail);
+	importCompetencesTractions(sDossierTravail);
+	importEquipeTraction(sDossierTravail);
+	importEquipeTrain(sDossierTravail);
+	importFamilleAgent(sDossierTravail);
+	importNumRecette(sDossierTravail);
+	importPointDeVente(sDossierTravail);
+	importTypologieAgent(sDossierTravail);
+	importCategorieEtablissement(sDossierTravail);
+}

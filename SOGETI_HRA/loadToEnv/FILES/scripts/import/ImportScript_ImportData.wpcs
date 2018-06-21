@@ -1,0 +1,213 @@
+/// @file TriggerScript_ImportNINIV.wpcs
+/// Script de l'import Data
+/// @author Grégory DARIDE
+
+var charSet = "UTF-8";
+var outPutFichier;
+var pathFichierLog;
+var nomFichierLog;
+var extensionFichierLog = ".log";
+var log = getLogger("DEFAULT");
+
+function logMessage(message)
+{
+	log.loggerInfo(message);
+}
+
+/// Transforme un string en date
+///@param sDate : string à transformer
+//:GLFUNCTION date stringToDate(sDate)
+function stringToDate(sDate)
+{	
+	var sDATE_FORMAT = "yyyyMMdd";
+	if (sDate != null) 
+	{
+		dDate = new Date(sDATE_FORMAT,sDate);
+	}
+	return dDate;
+}
+
+
+function importAgentsHRA(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "AgentsHRA.csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var NUM_CP = asValues[0];
+			var NOM = asValues[1];
+			var PRENOM = asValues[2];
+			var ID_ETABLISSEMENT = asValues[3];
+			var DD_ETABLISSEMENT = asValues[4];
+			var DF_ETABLISSEMENT = asValues[5];
+
+			var ID_UO = asValues[6];
+			var DD_UO = asValues[7];
+			var DF_UO = asValues[8];
+		
+			var REGIME = asValues[9];
+			var ASSERMENTATION = asValues[10];
+			var GRADE = asValues[11];
+			var DD_GRADE = asValues[12];
+			var DF_GRADE = asValues[13];
+			var CODE_NIVEAU = asValues[14];
+			var DD_NIVEAU = asValues[15];
+			var DF_NIVEAU = asValues[16];
+			var CODE_QUALIFICATION = asValues[17];
+			var DD_QUALIFICATION = asValues[18];
+			var DF_QUALIFICATION = asValues[19];
+			var CODE_POSITION = asValues[20];
+			var DD_POSITION = asValues[21];
+			var DF_POSITION = asValues[22];
+			var CODE_ECHELON = asValues[23];
+			var DD_ECHELON = asValues[24];
+			var DF_ECHELON = asValues[25];
+			var sCtgNameHRAAgent = "HRA_Agent";
+			var entryAgentCreation = new CtgItem(sCtgNameHRAAgent);
+			
+			var dDV_Defaut = new Date("dd/MM/yyyy", "01/03/2018");
+			var dFV_Defaut = new Date("dd/MM/yyyy", "01/01/2300");
+			
+			if (entryAgentCreation != null) {
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ID_AGENT", NUM_CP);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/NOM", PRENOM);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/PRENOM", PRENOM);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/REGIME", REGIME);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ASSERMENTATION", ASSERMENTATION);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/GRADES#0/GRADE", GRADE);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/GRADES#0/DD_GRADE", stringToDate(DD_GRADE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/GRADES#0/DF_GRADE", stringToDate(DF_GRADE));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/NIVEAUX#0/CODE_NIVEAU", CODE_NIVEAU);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/NIVEAUX#0/DD_NIVEAU", stringToDate(DD_NIVEAU));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/NIVEAUX#0/DF_NIVEAU", stringToDate(DF_NIVEAU));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/QUALIFICATIONS#0/CODE_QUALIFICATION", CODE_QUALIFICATION);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/QUALIFICATIONS#0/DD_QUALIFICATION", stringToDate(DD_QUALIFICATION));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/QUALIFICATIONS#0/DF_QUALIFICATION", stringToDate(DF_QUALIFICATION));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/POSITIONS#0/CODE_POSITION", CODE_POSITION);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/POSITIONS#0/DD_POSITION", stringToDate(DD_POSITION));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/POSITIONS#0/DF_POSITION", stringToDate(DF_POSITION));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ECHELONS#0/CODE_ECHELON", CODE_ECHELON);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ECHELONS#0/DD_ECHELON", stringToDate(DD_ECHELON));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ECHELONS#0/DF_ECHELON", stringToDate(DF_ECHELON));
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ETABLISSEMENTS#0/ID_ETABLISSEMENT", ID_ETABLISSEMENT);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ETABLISSEMENTS#0/DD_ETABLISSEMENT", DD_ETABLISSEMENT);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/ETABLISSEMENTS#0/DF_ETABLISSEMENT", DF_ETABLISSEMENT);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/UOS#0/ID_UO", ID_UO);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/UOS#0/DD_UO", DD_UO);
+				entryAgentCreation.setEntryAttrib("SpecCtg_HRA_Agent/UOS#0/DF_UO", DF_UO);
+
+				var errEntryCSCreation = entryAgentCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importEtablissementsHRA(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "EtablissementsHRA.csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_ETABLISSEMENT = asValues[0];
+			var LIB_ETABLISSEMENT = asValues[1];
+			
+			var sCtgNameHRAEtablissement = "HRA_Etablissement";
+			var entryCreation = new CtgItem(sCtgNameHRAEtablissement);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecCtg_HRA_Etablissement/ID_ETABLISSEMENT", ID_ETABLISSEMENT);
+				entryCreation.setEntryAttrib("SpecCtg_HRA_Etablissement/LIB_ETABLISSEMENT", LIB_ETABLISSEMENT);
+	
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+function importUOHRA(path) {
+
+	var sPATH_DELIM	= ";";
+	var bLKP_IS_READ_ONLY = false; // nécessaire si insertion nouvelle ligne
+	var sLine = null;
+	var rdrCSVFile = null;
+	var pathDoc = path + "UOHRA.csv";
+	var numeroligne = 0;
+	
+	rdrCSVFile = new Reader(pathDoc);
+	forEachLine(rdrCSVFile, sLine)
+	{
+		if (sLine != "" && numeroLigne != 0)
+		{
+			var asValues = sLine.parseDelim(sPATH_DELIM);
+			
+			var ID_UO = asValues[0];
+			var LIB_UO = asValues[1];
+			var DUO_UO = asValues[2];
+
+			var slkp = "Lkp_HRA_UO";
+			var entryCreation = new CtgItem(slkp);
+			
+			if (entryCreation != null) {
+				entryCreation.setEntryAttrib("SpecLkp_HRA_UO/ID_UO", ID_UO);
+				entryCreation.setEntryAttrib("SpecLkp_HRA_UO/LIB_UO", LIB_UO);
+				entryCreation.setEntryAttrib("SpecLkp_HRA_UO/DUO_UO", DUO_UO);
+				
+				var errEntryCreation = entryCreation.saveCtgItem();
+			}
+		}
+		
+		numeroLigne++;	
+	}
+}
+
+/// Exécute le script d'import
+/// @param doc chemin du fichier de data NewRef
+//:GLFUNCTION void doImport(doc)
+function doImport(doc)
+{	
+	var sDATE_FORMAT = "dd/MM/yyyy";
+	var dToday = today().formatDate("ddMMyy_HHmmss");
+	var erreur = null;	
+	var sDossierTravail = "/imports/travail/";
+
+	// Dézipper le fichier Fichier.zip dans le répertoire de travail
+	var docPath = doc.getDocPath();
+	logMessage("docPath = " + docPath);
+	var docName = getNameFromPath(docPath);		
+	logMessage("docName = " + docName);
+	
+	//Copie du fichier dans l'environnement TRAVAIL
+	doc.copyDoc(sDossierTravail);
+	//Unzip du fichier
+	unzip(docPath, sDossierTravail);
+	
+	importUOHRA(sDossierTravail);
+	importEtablissementsHRA(sDossierTravail);
+	importAgentsHRA(sDossierTravail);
+}
+
+doImport(in);

@@ -1,0 +1,139 @@
+// ----------------------------------------------------------------------------------
+/// @author SERRA@IBM
+/// @date 2018-06
+// ----------------------------------------------------------------------------------
+
+//Initialise la hm de parametrage avec les elements fonctionnels
+function init(){
+	var hmParametres=[];
+	hmParametres.oCTG = getCtgByName(); //ctg agents
+	hmParametres.oCTGEtablissement = getCtgByName("NewRef_Etablissement");
+	hmParametres.specName = "SpecCtg_NewRef_Agent";
+	var thisScript = getScriptByPath(concat("/scripts/import/ctg/Import_Agent_NewRef"));
+	hmParametres.mapAttributs = thisScript.getFunctionByName("mapAttributs");
+	return hmParametres;
+}
+
+//@param oItem item en cours
+//@param aColonnes hm des colonnes de la ligne en cours
+//@param hmParametres hm des paramètres de l'import
+function mapAttributs(oItem, aColonnes, hmParametres){
+	var groupingPath;
+	var nbGrp;
+    var sGrpPath;    
+//	oItem.setEntryAttrib(concat(sGrpPath,"ID_AGENT"), trim(aColonnes[0]) );//pk
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/NOM"), trim(aColonnes[1]) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/PRENOM"), trim(aColonnes[2]) );
+//
+	groupingPath = concat(hmParametres.specName,"/ETABLISSEMENTS");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  
+	var iEtabPK = trim(aColonnes[3]);//checkInt(trim(aColonnes[3]),0);
+	if(iEtabPK != null){
+		oItem.setEntryRelationshipAttrib(concat(sGrpPath,"ID_ETABLISSEMENT"), hmParametres.oCTGEtablissement, iEtabPK);// relationship
+	}
+//
+	groupingPath = concat(hmParametres.specName,"/UOS");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  
+	oItem.setEntryAttrib(concat(sGrpPath,"ID_UO"), trim(aColonnes[4]) );
+//		
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/REGIME_TRAVAIL"), trim(aColonnes[5]) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/ASSERMENTATION"), trim(aColonnes[6]) );
+//
+	groupingPath = concat(hmParametres.specName,"/GRADES");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"GRADE"), trim(aColonnes[7]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_GRADE"), hmParametres.convertDate.invoke( aColonnes[8] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_GRADE"), hmParametres.convertDate.invoke( aColonnes[9] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/NIVEAUX");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"CODE_NIVEAU"), checkInt(trim(aColonnes[10]),0) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_NIVEAU"), hmParametres.convertDate.invoke( aColonnes[11] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_NIVEAU"), hmParametres.convertDate.invoke( aColonnes[12] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/QUALIFICATIONS");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"CODE_QUALIFICATION"), trim(aColonnes[13]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_QUALIFICATION"), hmParametres.convertDate.invoke( aColonnes[14] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_QUALIFICATION"), hmParametres.convertDate.invoke( aColonnes[15] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/POSITIONS");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  		
+	oItem.setEntryAttrib(concat(sGrpPath,"CODE_POSITION"), checkInt(trim(aColonnes[16]),0) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_POSITION"), hmParametres.convertDate.invoke( aColonnes[17] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_POSITION"), hmParametres.convertDate.invoke( aColonnes[18] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/ECHELONS");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"CODE_ECHELON"), checkInt(trim(aColonnes[19]),0) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_ECHELON"), hmParametres.convertDate.invoke( aColonnes[20] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_ECHELON"), hmParametres.convertDate.invoke( aColonnes[21] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/FAMILLES");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"FAMILLE"), trim(aColonnes[22]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_FAMILLE"), hmParametres.convertDate.invoke( aColonnes[23] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_FAMILLE"), hmParametres.convertDate.invoke( aColonnes[24] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/TYPOLOGIES_AGENT");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"TYPOLOGIE_AGENT"), trim(aColonnes[25]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_TYPOLOGIE_AGENT"), hmParametres.convertDate.invoke( aColonnes[26] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_TYPOLOGIE_AGENT"), hmParametres.convertDate.invoke( aColonnes[27] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/EQUIPES");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"EQUIPE_TRAIN"), trim(aColonnes[28]) );// un seul champ equipe dans le fichier - on met dans train
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_EQUIPE"), hmParametres.convertDate.invoke( aColonnes[29] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_EQUIPE"), hmParametres.convertDate.invoke( aColonnes[30] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/RESIDENCES");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  	
+	oItem.setEntryAttrib(concat(sGrpPath,"RESIDENCE"), trim(aColonnes[31]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_RESIDENCE"), hmParametres.convertDate.invoke( aColonnes[32] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_RESIDENCE"), hmParametres.convertDate.invoke( aColonnes[33] ) );
+	//
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/DD_PRODUCTION"), hmParametres.convertDate.invoke( aColonnes[34] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/COMPETENCES_LANGUE");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  		
+	oItem.setEntryAttrib(concat(sGrpPath,"COMPETENCE_LANGUE"), trim(aColonnes[35]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_COMPETENCE_LANGUE"), hmParametres.convertDate.invoke( aColonnes[36] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_COMPETENCE_LANGUE"), hmParametres.convertDate.invoke( aColonnes[37] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/COMPETENCES_TRAIN");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  
+	oItem.setEntryAttrib(concat(sGrpPath,"COMPETENCE_TRAIN"), trim(aColonnes[41]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_COMPETENCE_TRAIN"), hmParametres.convertDate.invoke( aColonnes[42] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_COMPETENCE_TRAIN"), hmParametres.convertDate.invoke( aColonnes[43] ) );
+//
+	groupingPath = concat(hmParametres.specName,"/COMPETENCES_TRACTION");
+	nbGrp = oItem.getRootEntryNode().getEntryNode(groupingPath).getEntryNodeChildren().size();
+    sGrpPath = concat(groupingPath,"#",nbGrp,"/");  
+	oItem.setEntryAttrib(concat(sGrpPath,"COMPETENCE_TRACTION"), trim(aColonnes[47]) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DD_COMPETENCE_TRACTION"), hmParametres.convertDate.invoke( aColonnes[48] ) );
+	oItem.setEntryAttrib(concat(sGrpPath,"DF_COMPETENCE_TRACTION"), hmParametres.convertDate.invoke( aColonnes[49] ) );
+//
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/POINT_DE_VENTE"), trim(aColonnes[50]) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/NUM_RECETTE"), checkInt(trim(aColonnes[51]),0) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/TEL_COMPLEMENTAIRE"), trim(aColonnes[52]) );
+}
+
+////////////////////////// Execution //////////////////////////
+var hmParametres = init();
+var importFichierCSV = getScriptByPath("/scripts/triggers/Library_Import").getFunctionByName("importFichierCSV");
+importFichierCSV.invoke(in,hmParametres);
+//Fin

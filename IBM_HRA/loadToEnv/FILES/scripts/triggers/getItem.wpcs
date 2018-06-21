@@ -1,0 +1,68 @@
+//201806 - SERRA - Sample script to implement a rest webservice as a trigger script
+//register in triggers.csv
+//call with
+// http://10.145.132.232:7507/utils/invoker.jsp?script=getItem&invoking_user=Admin/HRA&bUserOutput=false&catalog=HRA_Etablissement&pk=1
+
+//@param s string
+function log(s){
+	getLogger("WBS").loggerInfo(checkString(s,""));
+}
+//@param s value
+function w(s){
+	out.writeln(checkString(s,""));
+}
+//@param tag xml tag
+//@param s value
+function tag(tag,s){
+	if(checkString(s,"")!=""){
+		return concat("<",tag,">",s,"</",tag,">");
+	}else{
+		return concat("<",tag,"/>");
+	}
+}
+
+//@param request hm of request args
+function answer(request){
+	var oErr = null; var sErr="";var sRes="";
+	catchError(oErr){
+		var sCtg = request.catalog;
+		var sPk = request.pk;
+		var oCtg = getCtgByName(sCtg);
+		if(oCtg == null){
+			sErr = concat("Catalog ",request.catalog," not found");
+		}else{
+			var oItem = oCtg.getEntryByPrimaryKey(sPk);
+			if(oItem == null){
+				sErr = concat("Item ",request.pk," not found in catalog ",request.catalog);			
+			}else{
+				var sItmInfo = tag("pk",oItem.getPrimaryKey());
+				sItmInfo = sItmInfo + tag("displayName",oItem.getDisplayValue());
+				log(concat("Item :",oItem.getPrimaryKey()," ",oItem.getDisplayValue()));
+				var hmEntryNode = oItem.getFlatEntryNodes();
+				var okey;var oEntryNode;
+				var sAttrs = "";
+				forEachHmElement(hmEntryNode,okey,oEntryNode){
+					var sType = oEntryNode.getEntryNodeType();
+					if(sType == "V"){//value
+						var sAttr = tag("path",oEntryNode.getEntryNodeExactPath());
+						sAttr = sAttr + tag("value",oEntryNode.getEntryNodeValue());
+						sAttrs = sAttrs + tag("attribute",sAttr);
+					}
+				}
+				sRes = tag("item",sItmInfo + tag("attributes",sAttrs));
+			}
+		}
+	}
+	if(oErr != null){
+		w(tag("body",tag("error",oErr)));
+		log(""+oErr);
+		
+	}else if(sErr != ""){ 
+		w(tag("body",tag("error",sErr)));
+		log(sErr);
+	}else{
+		w(tag("body",sRes));
+	}
+}
+
+answer(request);//implicit request hm

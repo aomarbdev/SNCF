@@ -1,0 +1,4 @@
+CS?,Catalog Name,Spec,Primary Hierarchy,Secondary Hierarchies,Inherit?,Display Attribute,ACG,Links,Locations,Scripts
+
+,HRA_Agent,SpecCtg_HRA_Agent,H_000_Generique,,no,SpecCtg_HRA_Agent/ID_AGENT,ACG_Metier,,,"SCRIPT_NAME|CtgPostProcScript_HRA_Agent,POST_SAVE_SCRIPT_NAME|CtgPostSaveScript_HRA_Agent"
+,HRA_Etablissement,SpecCtg_HRA_Etablissement,H_000_Generique,,no,SpecCtg_HRA_Etablissement/ID_ETABLISSEMENT,ACG_Metier,,,"SCRIPT_NAME|CtgPostProcScript_HRA_Etablissement,POST_SAVE_SCRIPT_NAME|CtgPostSaveScript_HRA_Etablissement"

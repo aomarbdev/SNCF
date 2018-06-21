@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------------
+/// @author SERRA@IBM
+/// @date 2018-06
+// ----------------------------------------------------------------------------------
+
+//Initialise la hm de parametrage avec les elements fonctionnels
+function init(){
+	var hmParametres=[];
+	hmParametres.oCTG = getCtgByName(); //ctg etablissement
+	hmParametres.specName = concat("SpecCtg_",hmParametres.oCTG .getCtgName());
+	var thisScript = getScriptByPath(concat("/scripts/import/ctg/Import_Etablissement_NewRef"));
+	hmParametres.mapAttributs = thisScript.getFunctionByName("mapAttributs");
+	return hmParametres;
+}
+
+//@param oItem item en cours
+//@param aColonnes hm des colonnes de la ligne en cours
+//@param hmParametres hm des paramètres de l'import
+function mapAttributs(oItem, aColonnes, hmParametres){
+	//oItem.setEntryAttrib(concat(hmParametres.specName,"/ID_ETABLISSEMENT"), trim(aColonnes[0]) );
+	//lib ignoré - 1
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/LIB_COURT_ETABLISSEMENT"), trim(aColonnes[2]) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/TRIGRAMME_ETABLISSEMENT"), trim(aColonnes[3]) );
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/CATEGORIE_ETABLISSEMENT"), trim(aColonnes[4]) );	
+//	colonnes:	ID ETABLISSEMENT	LIBELLE	LIBELLE COURT	TRIGRAMME	CATEGORIE
+	
+//
+}
+
+////////////////////////// Execution //////////////////////////
+var hmParametres = init();
+var importFichierCSV = getScriptByPath("/scripts/triggers/Library_Import").getFunctionByName("importFichierCSV");
+importFichierCSV.invoke(in,hmParametres);
+//Fin

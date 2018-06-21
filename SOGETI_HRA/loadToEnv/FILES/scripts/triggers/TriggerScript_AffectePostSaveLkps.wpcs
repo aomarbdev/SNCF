@@ -1,0 +1,25 @@
+/// @file AffectePostSaveLkps.wpcs
+/// Ce fichier permet d'activer les scripts post save sur les lookups
+/// @author Nicolas MANIN
+/// @date 31-Jui-2009
+/// $Id: AffectePostSaveLkps.wpcs,v 0.1 2009/07/31 nmanin Exp $ 
+
+/// Cette fonction permet d'affecter un script post save à une lookup.
+/// @param sScriptName Nom du script post save
+/// @param sLkpName Nom de la lookup à laquelle on veut associer le script 
+//:GLFUNCTION affecteScriptPostSave(String sLkpName, String sScriptName)
+function affecteScriptPostSave(sLkpName, sScriptName)
+{
+	var properties = [];
+	
+	properties["POST_SAVE_SCRIPT_NAME"] = sScriptName;
+	
+	getCtgByName(sLkpName).setContainerProperties(properties);   
+}
+
+function doAffecteLkpScripts() {
+	
+	affecteScriptPostSave("Lkp_HRA_UO", "LkpPostSaveScript_Lkp_HRA_UO");
+}
+
+doAffecteLkpScripts();
