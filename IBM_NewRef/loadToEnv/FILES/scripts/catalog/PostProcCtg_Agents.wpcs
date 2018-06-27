@@ -1,0 +1,144 @@
+/// @param entry une entry
+//:GLFUNCTION majChampsActuels(Entry entry)
+function majChampsActuels(entry) {
+	var log = getLogger("CtgPostProcScript.majChampsActuels");
+	// Remplissage des dates "actuel" de l'agent pour les groupings concernés
+	
+	// GRADES
+	var nodes = entry.getRootEntryNode().getEntryNodes("SpecCtg_NewRef_Agent/GRADES");
+	var node;
+	for(var i = 0; i< nodes.size(); i++)
+	{
+		node = nodes[i];
+		var cle = node.getEntryNode("GRADE").getEntryNodeValue();
+		var ddv = node.getEntryNode("DD_GRADE").getEntryNodeValue();
+		var dfv = node.getEntryNode("DF_GRADE").getEntryNodeValue();
+		
+		if(cle != null && ddv != null && dfv != null && ddv.isDateBefore(today()) && dfv.isDateAfter(today()))
+		{
+			entry.setCtgItemAttrib("/SpecCtg_NewRef_Agent/GRADE_ACTUEL", cle);
+		}
+	}
+	
+	// NIVEAUX
+	
+	nodes = entry.getRootEntryNode().getEntryNodes("SpecCtg_NewRef_Agent/NIVEAUX");
+	for(var i = 0; i< nodes.size(); i++)
+	{
+		node = nodes[i];
+		var cle = node.getEntryNode("CODE_NIVEAU").getEntryNodeValue();
+		var ddv = node.getEntryNode("DD_NIVEAU").getEntryNodeValue();
+		var dfv = node.getEntryNode("DF_NIVEAU").getEntryNodeValue();
+		
+		
+		if(cle != null && ddv != null && dfv != null && ddv.isDateBefore(today()) && dfv.isDateAfter(today()))
+		{
+			entry.setCtgItemAttrib("/SpecCtg_NewRef_Agent/CODE_NIVEAU_ACTUEL", cle);
+		}
+	}
+	
+	// QUALIFICATIONS
+	
+	nodes = entry.getRootEntryNode().getEntryNodes("SpecCtg_NewRef_Agent/QUALIFICATIONS");
+	for(var i = 0; i< nodes.size(); i++)
+	{
+		node = nodes[i];
+		var cle = node.getEntryNode("CODE_QUALIFICATION").getEntryNodeValue();
+		var ddv = node.getEntryNode("DD_QUALIFICATION").getEntryNodeValue();
+		var dfv = node.getEntryNode("DF_QUALIFICATION").getEntryNodeValue();
+		
+		
+		if(cle != null && ddv != null && dfv != null && ddv.isDateBefore(today()) && dfv.isDateAfter(today()))
+		{
+			entry.setCtgItemAttrib("/SpecCtg_NewRef_Agent/CODE_QUALIFICATION_ACTUEL", cle);
+		}
+	}
+	
+	// POSITIONS
+	
+	nodes = entry.getRootEntryNode().getEntryNodes("SpecCtg_NewRef_Agent/POSITIONS");
+	for(var i = 0; i< nodes.size(); i++)
+	{
+		node = nodes[i];
+		var cle = node.getEntryNode("CODE_POSITION").getEntryNodeValue();
+		var ddv = node.getEntryNode("DD_POSITION").getEntryNodeValue();
+		var dfv = node.getEntryNode("DF_POSITION").getEntryNodeValue();
+		
+		
+		if(cle != null && ddv != null && dfv != null && ddv.isDateBefore(today()) && dfv.isDateAfter(today()))
+		{
+			entry.setCtgItemAttrib("/SpecCtg_NewRef_Agent/CODE_POSITION_ACTUEL", cle);
+		}
+	}
+	
+	// ECHELONS
+	
+	nodes = entry.getRootEntryNode().getEntryNodes("SpecCtg_NewRef_Agent/ECHELONS");
+	for(var i = 0; i< nodes.size(); i++)
+	{
+		node = nodes[i];
+		var cle = node.getEntryNode("CODE_ECHELON").getEntryNodeValue();
+		var ddv = node.getEntryNode("DD_ECHELON").getEntryNodeValue();
+		var dfv = node.getEntryNode("DF_ECHELON").getEntryNodeValue();
+		
+		
+		if(cle != null && ddv != null && dfv != null && ddv.isDateBefore(today()) && dfv.isDateAfter(today()))
+		{
+			entry.setCtgItemAttrib("/SpecCtg_NewRef_Agent/CODE_ECHELON_ACTUEL", cle);
+		}
+	}
+
+}
+
+// Début du script
+var oEntry = entry;//implicit
+majChampsActuels(oEntry);
+
+var log = getLogger("CtgPostProcScript");
+
+//move itm to categories
+// NOM :
+//var entry;
+//forEachCtgItem("NewRef_Agent",entry)
+//{
+var hierarchieGDE = getCategoryTreeByName("Hiérarchie par Nom Agent");
+var c = hierarchieGDE.getCategoryByPath("ASCT","/");
+var c2 = hierarchieGDE.getCategoryByPath("ADC","/");
+var nom = oEntry.getEntryAttrib("/SpecCtg_NewRef_Agent/NOM");       
+if(nom != null && c != null && nom.contains("ASCT"))
+{
+	oEntry.mapCtgItemToCategory(c);
+//	entry.saveCtgItem();
+}
+if(nom != null && c2 != null && nom.contains("ADC"))
+{
+	oEntry.mapCtgItemToCategory(c2);
+//	entry.saveCtgItem();
+}
+//}
+// ID:
+var hierarchieName = getCategoryTreeByName("Hiérarchie par ID Agent");
+log.loggerInfo("hierarchieName" + hierarchieName);
+//var itm;
+//forEachCtgItem("NewRef_Agent",itm)
+//{
+var id = oEntry.getEntryAttrib("/SpecCtg_NewRef_Agent/ID_AGENT");
+var c3 = hierarchieName.getCategoryByPath(substring(id,0,2),"/");
+if(id != null && c3 != null)
+{
+	oEntry.mapCtgItemToCategory(c3);
+//    entry.saveCtgItem();
+}
+
+// Set ID_UO from ID_UO_Filtered
+var specName = oEntry.getEntryContainer().getCtgSpec().getSpecName();
+var entryNodes = oEntry.getRootEntryNode().getEntryNodes(specName+"/UOS/ID_UO_Filtered");
+
+for (var i=0; i<entryNodes.size(); i++) {
+	var entrynode = entryNodes[i];
+	var val = oEntry.getEntryAttrib(entrynode.getEntryNodeExactPath().replace("_Filtered",""));
+	if (val != entrynode.getEntryNodeValue()) {
+		log.loggerInfo("About to setEntryAttrib with val["+entrynode.getEntryNodeValue()+"]");
+		oEntry.setEntryAttrib(entrynode.getEntryNodeExactPath().replace("_Filtered",""), "" + entrynode.getEntryNodeValue());
+	}	
+}

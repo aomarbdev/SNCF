@@ -1,0 +1,160 @@
+//@param hmResponse http response HM
+function getHeader(hmResponse){
+	var resHeader = hmResponse["RESPONSE_HEADER_FIELDS"];
+	return resHeader;
+}
+
+//@param in reader
+function read(in){
+	var out = "";
+	var line;
+	forEachLine(in,line){
+		out = concat(out,line);
+	}
+	return out;
+}
+	
+//@param hmResponse http response HM
+function getBody(hmResponse){
+	return read(hmResponse["RESPONSE_READER"]);
+}
+//@param sUrl target url
+//@param hmHeaders http header
+//@param hmParams http parameters
+function get(sUrl,hmHeaders,hmParams){
+	var sRequestMethod = "GET";//get/post
+	var hmResponse = getFullHTTPResponse(sUrl,hmHeaders,hmParams,sRequestMethod);
+	return hmResponse;
+}
+
+//login to classic UI
+//@param sHRAhost hra hostname or ip
+function login(sHRAhost){
+	var sUrl = concat("http://",sHRAhost,":7507/utils/enterLogin.jsp");//?doit=chk_login&username=Admin&password=trinitron&company_code=diapason";
+	var hmHeaders = [];//headers
+	var hmParameters = [];//body params
+	hmParameters["doit"]="chk_login";
+	hmParameters["username"]="Admin";
+	hmParameters["password"]="trinitron";
+	hmParameters["company_code"]="HRA";
+	var response = get(sUrl,hmHeaders,hmParameters);
+	var sCookie = getHeader(response)["Set-Cookie"];
+	return sCookie;//Get the cookie to give back as header 'Cookie'
+}
+
+//@param sHRAhost hra hostname or ip
+//@param sCtg catalog name
+//@param oEntry item
+function call(sHRAhost,sCtg,oEntry){
+	var sCookie = login(sHRAhost);
+	var sUrl = concat("http://",sHRAhost,":7507/utils/invoker.jsp");
+	var hmHeaders = [];//headers
+	hmHeaders["Cookie"]=sCookie;
+	var hmParameters = [];//body params
+	hmParameters["script"]="getItem";
+	hmParameters["invoking_user"]="Admin/HRA";
+	hmParameters["bUserOutput"]="false";
+	hmParameters["catalog"]=sCtg;
+	var sPk = oEntry.getPrimaryKey();
+	hmParameters["pk"]=sPk;
+	var response = get(sUrl,hmHeaders,hmParameters);
+	var sHeader = getHeader(response);
+	var sBody = getBody(response);
+	var oXmlDoc = new XmlDocument(sBody);
+	var oErrorNode = oXmlDoc.getXMLNode("error");
+	var bExists = (oErrorNode == null);
+	return bExists;
+}
+
+function validateNumeroAgent(item, err) {
+	var log = getLogger("Validation_Rules");
+	var bExistNewRef = false;
+	var bExistHRA = true;
+	if (item.getEntryContainer().getCtgName() == "Creation Agent"
+		&& checkString(getColAreaByName(item.getEntryContainer().getCtgName()).getStepsForEntry(item)[0],"Saisie Numero Agent") == "Saisie Numero Agent") {
+		log.loggerInfo("Step" + getColAreaByName(item.getEntryContainer().getCtgName()).getStepsForEntry(item)[0]);	
+		
+		// Should not exist in NewRef
+		bExistNewRef = (getCtgByName("NewRef_Agent").getEntryByPrimaryKey(item.getPrimaryKey()) != null);
+		if (bExistNewRef) {
+			err.writeln("Agent déjà existant dans NewRef");
+		}
+		log.loggerInfo("bExistNewRef["+(bExistNewRef)+"]");
+	
+		// Should exist in HRA		
+		if (!bExistNewRef) {
+			var bExistHRA = call("10.145.132.232","HRA_Agent", item);//catalog, pk
+			if (!bExistHRA) {
+				err.writeln("Agent non existant dans HRA");
+			}
+			log.loggerInfo("bExistHRA["+(bExistHRA)+"]");
+		}
+		log.loggerInfo("validateNumeroAgent["+(bExistHRA && !bExistNewRef)+"]");
+	}
+	return (bExistHRA && !bExistNewRef);	
+}
+
+function validateCompetenceTrain(item, err) {
+	var log = getLogger("Validation_Rules");
+	//dumpContext(log);
+	var val = true;
+	var specName = item.getEntryContainer().getCtgSpec().getSpecName();
+	var entryNodes = item.getRootEntryNode().getEntryNodes(specName+"/FAMILLES/FAMILLE");
+	for (var i=0; i<entryNodes.size(); i++) {
+		if (entryNodes[i].getEntryNodeValue() == "ADC") {
+			log.loggerDebug("validateCompetenceTrain: ADC is found");
+			val = false;	
+			break;
+		}
+	}
+	if (val != true) {
+		err.writeln("Impossible de positionner une compétence TRAIN pour un agent ADC");
+	}
+	log.loggerDebug("validateCompetenceTrain is " + val);
+	return val;
+}
+
+function validateCompetenceTraction(item, err) {
+	var log = getLogger("Validation_Rules");
+	var val = false;
+	var specName = item.getEntryContainer().getCtgSpec().getSpecName();
+	var entryNodes = item.getRootEntryNode().getEntryNodes(specName+"/FAMILLES/FAMILLE");
+	for (var i=0; i<entryNodes.size(); i++) {
+		if (entryNodes[i].getEntryNodeValue() == "ADC") {
+			log.loggerDebug("validateCompetenceTraction: ADC is found");
+			val = true;	
+			break;
+		}
+	}
+	if (val != true) {
+		err.writeln("Impossible de positionner une compétence TRACTION pour un agent non ADC");
+	}
+	log.loggerDebug("validateCompetenceTraction is " + val);
+	return val;
+}
+
+function getValidUOs(item, entrynode) {
+	var res = [];
+	var lkpUOs = getLkpByName("Lkp_NewRef_UO");
+	var specName = item.getEntryContainer().getCtgSpec().getSpecName();
+	var entryNodes = item.getRootEntryNode().getEntryNodes(specName+"/ETABLISSEMENTS/ID_ETABLISSEMENT");
+	for (var i=0; i<entryNodes.size(); i++) {
+		if (entryNodes[i].getEntryNodeValue() != null) {
+			var values = [];
+			values["SpecLkp_NewRef_UO/LIB_ETAB_RATTACHEMENT"] = item.getEntryRelatedItemInfo(entryNodes[i].getEntryNodeValue())[1];
+			res = lkpUOs.getKeysFromValues(values);
+		}	
+	}
+	return res;
+}
+
+
+var ctg = getCtgByName("NewRef_Agent");
+var item = ctg.getCtgItemByPrimaryKey("5611978C");
+var res;
+//res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("validateCompetenceTraction").invoke(item,err);
+//res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("validateCompetenceTrain").invoke(item,err);
+//res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("validateNumeroAgent").invoke(item,err);
+res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("getValidUOs").invoke(item,entrynode);
+//res =  item.getEntryAttrib(entrynode.getEntryNodeExactPath().replace("_Filtered",""));
+out.writeln( "RESULT" + res );

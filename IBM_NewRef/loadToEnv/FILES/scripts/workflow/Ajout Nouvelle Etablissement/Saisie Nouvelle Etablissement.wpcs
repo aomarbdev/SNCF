@@ -109,12 +109,12 @@ function call(sHRAhost,sCtg,oEntry){
 
 
 function IN(entrySet, colArea, workflow, step, stepPath){
-	 log(concat("==============> dans IN ",stepPath));
+	 //log(concat("==============> dans IN ",stepPath));
 }
 
 function OUT(entrySet, colArea, workflow, step, stepPath){  
-	 log(concat("==============> dans OUT ",stepPath));
-	 log(concat("entrySet:",entrySet));
+	 //log(concat("==============> dans OUT ",stepPath));
+	 //log(concat("entrySet:",entrySet));
 	 var oEntry = null;
 	 forEachEntrySetElement(entrySet, oEntry){
 		log(concat("Traitement item: ",oEntry.getPrimaryKey()));

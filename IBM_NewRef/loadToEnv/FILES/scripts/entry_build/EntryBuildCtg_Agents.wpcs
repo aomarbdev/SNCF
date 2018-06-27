@@ -1,0 +1,12 @@
+var log = getLogger("CtgEntryBuildScript_NewRef_Agent");
+log.loggerInfo("Inside");
+var specName = entry.getEntryContainer().getCtgSpec().getSpecName();
+var entryNodes = entry.getRootEntryNode().getEntryNodes(specName+"/UOS/ID_UO_Filtered");
+
+for (var i=0; i<entryNodes.size(); i++) {
+	var entrynode = entryNodes[i];
+	var val = item.getEntryAttrib(entrynode.getEntryNodeExactPath().replace("_Filtered",""));
+	if (val != entrynode.getEntryNodeValue()) {
+		entrynode.setEntryNodeValue(val);
+	}	
+}
