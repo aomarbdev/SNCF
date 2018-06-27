@@ -1,7 +1,7 @@
 //201806 - SERRA - Sample script to implement a rest webservice as a trigger script
 //register in triggers.csv
 //call with
-// http://10.145.132.232:7507/utils/invoker.jsp?script=getItem&invoking_user=Admin/HRA&bUserOutput=false&catalog=HRA_Etablissement&pk=1
+// http://10.145.132.232:7507/utils/invoker.jsp?script=getItem&invoking_user=Admin/HRA&bUserOutput=false&catalog=HRA_Agent&pk=4101070
 
 //@param s string
 function log(s){
@@ -10,6 +10,7 @@ function log(s){
 //@param s value
 function w(s){
 	out.writeln(checkString(s,""));
+	log(s);
 }
 //@param tag xml tag
 //@param s value
@@ -42,17 +43,16 @@ function answer(request){
 				//var okey;var oEntryNode;
 				var sAttrs = "";
 				for(var i=0;i<hmEntryNode.size();i++){
-				//forEachHmElement(hmEntryNode,okey,oEntryNode){
 					var oEntryNode = hmEntryNode[i];
 					var sType = oEntryNode.getEntryNodeType();
 					if(sType == "V"){//value
-						var sErr=null;
+						var sErr="";
 						catchError(sErr){
 							var sExactPath = oEntryNode.getEntryNodeExactPath();
 							var sAttr = tag("path",sExactPath);
 							//case of relationship ID_ETABLISSEMENT
-							if(oEntryNode.getEntryNodeExactPath().endsWith("ID_ETABLISSEMENT")){
-							 	var sPk;
+							if(sExactPath.endsWith("ID_ETABLISSEMENT")){
+							 	var sPk="";
 							 	var hmRel = oItem.getEntryRelationshipAttrib(sExactPath);
 							 	if(hmRel != null && hmRel.size()>0){
 							 		sPk = hmRel[1];
@@ -63,12 +63,15 @@ function answer(request){
 							}
 							sAttrs = sAttrs + tag("attribute",sAttr);							
 						}
+						if(sErr!=""){
+							log(concat("sErr:",sErr));
+						}
 					}
 				}
 				sRes = tag("item",sItmInfo + tag("attributes",sAttrs));
 			}
 		}
-	}
+	}//end catcherror
 	if(oErr != null){
 		w(tag("body",tag("error",oErr)));
 		log(""+oErr);
