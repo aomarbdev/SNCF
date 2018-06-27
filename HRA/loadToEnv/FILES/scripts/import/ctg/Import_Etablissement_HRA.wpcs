@@ -1,0 +1,28 @@
+// ----------------------------------------------------------------------------------
+/// @author SERRA@IBM
+/// @date 2018-06
+// ----------------------------------------------------------------------------------
+
+//Initialise la hm de parametrage avec les elements fonctionnels
+function init(){
+	var hmParametres=[];
+	hmParametres.oCTG = getCtgByName(); //ctg etablissement
+	hmParametres.specName = concat("SpecCtg_",hmParametres.oCTG.getCtgName());
+	var thisScript = getScriptByPath(concat("/scripts/import/ctg/Import_Etablissement_HRA"));
+	hmParametres.mapAttributs = thisScript.getFunctionByName("mapAttributs");
+	return hmParametres;
+}
+
+//@param oItem item en cours
+//@param aColonnes hm des colonnes de la ligne en cours
+//@param hmParametres hm des paramètres de l'import
+function mapAttributs(oItem, aColonnes, hmParametres){
+//Colonnes : ID ETABLISSEMENT,LIBELLE
+	oItem.setEntryAttrib(concat(hmParametres.specName,"/LIB_ETABLISSEMENT"), trim(aColonnes[1]) );
+}
+
+////////////////////////// Execution //////////////////////////
+var hmParametres = init();
+var importFichierCSV = getScriptByPath("/scripts/triggers/Library_Import").getFunctionByName("importFichierCSV");
+importFichierCSV.invoke(in,hmParametres);
+//Fin

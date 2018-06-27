@@ -1,4 +1,8 @@
 Script path (relative to loadToEnv),Script name,Script type,File spec / Destination spec name (imports / exports),Input spec name (if any),Character set,ASP / JSP-like,Container name (ctr / ctg scripts),Container type (entry build/preview/macro scripts)
+
 /scripts/triggers/getItem.wpcs,getItem,TRIGGER,,,UTF-8,,,
-/scripts/wbs/GetItemInfo.wpcs,GetItemInfo,WBS,,,UTF-8,No,,
-/wsdl/GetItemInfo.wsdl,/wsdl/GetItemInfo.wsdl,DOCUMENT,,,UTF-8,,,
+
+/scripts/import/ctg/Import_Agent_HRA.wpcs,Import_Agent_HRA,CTG_IMPORT,Dummy_File_Spec,,UTF-8,,,
+/scripts/import/ctg/Import_Etablissement_HRA.wpcs,Import_Etablissement_HRA,CTG_IMPORT,Dummy_File_Spec,,UTF-8,,,
+
+/scripts/triggers/Library_Import.wpcs,Library_Import,TRIGGER,,,UTF-8,,,

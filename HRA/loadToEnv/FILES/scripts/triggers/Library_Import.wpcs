@@ -1,0 +1,83 @@
+// ----------------------------------------------------------------------------------
+///@file Library_Import
+/// @author SERRA@IBM
+/// @date 2018-06
+// ----------------------------------------------------------------------------------
+
+//void log(str)
+//Fonction de log
+//@param str string à logger
+function log(str){
+	getLogger("Import").loggerInfo(""+str);
+}
+
+//void logErr(itemPK, ligne, str)
+//Fonction de log d'erreur
+//@param itemPK pk de l'item en erreur
+//@param ligne ligne en erreur
+//@param str message d'erreur
+function logErr(itemPK, ligne, str){
+	log(str);
+	if(ligne != null){
+		log(concat("ligne:",ligne));
+	}
+	logError(itemPK, ""+str);//logError attend une chaine de caractères, d'où le ""+
+}    	
+
+//date convertDate(str)
+//@param str string à convertir en date au format dd/MM/yyyy
+//@return date ou null
+function convertDate(str){
+	if(checkString(str,"")==""){return null;}
+	return new Date("dd/MM/yyyy HH:mm:ss",concat(trim(str)," 13:00:00"));
+}
+
+////////////////////////// Fonctions traitement //////////////////////////
+//Initialise la hm de parametrage avec les elements techniques
+//@param hmParametres hm à completer
+function init(hmParametres){
+	hmParametres.oCTRprimaire = hmParametres.oCTG.getPrimaryCategoryTree();//Hierarchie primaire du ctg	
+	var thisScript = "/scripts/triggers/Library_Import";
+	hmParametres.convertDate = getScriptByPath(thisScript).getFunctionByName("convertDate");
+}
+
+//@param aColonnes hm des colonnes de la ligne en cours
+//@param hmParametres hm des parametres de l'import
+function lectureLigne(aColonnes,hmParametres){
+    var itemPK  = aColonnes[0];
+	var oCTG = hmParametres.oCTG; 
+	var oItem = oCTG.getEntryByPrimaryKey(itemPK);
+    if(oItem == null){//l'item n'est pas en cache applicatif
+    	oItem = new CtgItem(oCTG);
+    	oItem.setCtgItemPrimaryKey(itemPK);//Je viens de créer l'item, il n'a pas encore de pk
+	}    
+	if( oItem != null){
+		hmParametres.mapAttributs.invoke(oItem, aColonnes, hmParametres);//Fonction de valorisation des attributs	
+		log(concat("Saving item ",oItem.getPrimaryKey(),":",oItem.saveCtgItem()));
+	}//fi item null
+}//Fin traitement de la ligne
+
+
+//void importFichierCSV(in,hmParametres)
+//Fonction generique d'import CSV, utilisée par les imports
+//@param in buffered reader input - parametre implicit de l'import
+//@param hmParametres hm des parametres de l'import
+function importFichierCSV(in,hmParametres){
+	log("Debut d'import");
+	disableBatchProcessingForItems();//Desactive le traitement par Lot, afin de s'assurer que les erreurs sont detectées à chaque ligne du fichier
+	init(hmParametres);	
+	var parser  = new DelimParser(in,";");
+	var bDone = false;
+	parser.splitLine();//ignore entete
+	//Lecture contenu
+	while(!bDone){
+	    var aColonnes = parser.splitLine();
+	    bDone = (null == aColonnes);
+	    if(!bDone){
+	    	lectureLigne(aColonnes,hmParametres);
+	    }
+	}
+	log("Fin - Nombre de lignes de données traitées");
+}
+
+// EOF //
