@@ -46,20 +46,23 @@ function answer(request){
 					var oEntryNode = hmEntryNode[i];
 					var sType = oEntryNode.getEntryNodeType();
 					if(sType == "V"){//value
-						var sExactPath = oEntryNode.getEntryNodeExactPath();
-						var sAttr = tag("path",sExactPath);
-						//case of relationship ID_ETABLISSEMENT
-						if(oEntryNode.getEntryNodeExactPath().endsWith("ID_ETABLISSEMENT")){
-						 	var sPk;
-						 	var hmRel = oItem.getEntryRelationshipAttrib(sExactPath);
-						 	if(hmRel != null && hmRel.size()>0){
-						 		sPk = hmRel[1];
-						 	}
-						 	sAttr = sAttr + tag("value",sPk);
-						}else{
-							sAttr = sAttr + tag("value",oEntryNode.getEntryNodeValue());
+						var sErr=null;
+						catchError(sErr){
+							var sExactPath = oEntryNode.getEntryNodeExactPath();
+							var sAttr = tag("path",sExactPath);
+							//case of relationship ID_ETABLISSEMENT
+							if(oEntryNode.getEntryNodeExactPath().endsWith("ID_ETABLISSEMENT")){
+							 	var sPk;
+							 	var hmRel = oItem.getEntryRelationshipAttrib(sExactPath);
+							 	if(hmRel != null && hmRel.size()>0){
+							 		sPk = hmRel[1];
+							 	}
+							 	sAttr = sAttr + tag("value",sPk);
+							}else{
+								sAttr = sAttr + tag("value",oEntryNode.getEntryNodeValue());
+							}
+							sAttrs = sAttrs + tag("attribute",sAttr);							
 						}
-						sAttrs = sAttrs + tag("attribute",sAttr);
 					}
 				}
 				sRes = tag("item",sItmInfo + tag("attributes",sAttrs));
