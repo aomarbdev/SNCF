@@ -98,7 +98,18 @@ function decodeXML(sBody, oItem){
 			if(hmAttributesToSet.containsKey(sAttrName)){
 				var sValue = oAttrNode.getXMLNodeValue("value");
 				log(concat("Setting ",sPath," to ",sValue));
-				oItem.setEntryAttrib(sPath,sValue);
+				var sErr=null;
+				catchError(sErr){
+					if(sPath.endsWith("ID_ETABLISSEMENT")){
+						//specific case of relationships : ID_ETABLISSEMENT
+						oItem.setEntryRelationshipAttrib(sPath, getCtgByName("NewRef_Etablissement"), sValue);// relationship
+					}else{
+						oItem.setEntryAttrib(sPath,sValue);
+					}			
+				}
+				if(sErr != null){
+					log(concat("Error setting ",sPath," to ",sValue," : ",sErr));
+				}
 			}
 		}
 		log(concat("Saving item ",oItem.getPrimaryKey(),":",oItem.saveCtgItem()));
@@ -132,12 +143,12 @@ function call(sHRAhost,sCtg,oEntry){
 
 
 function IN(entrySet, colArea, workflow, step, stepPath){
-	 log(concat("==============> dans IN ",stepPath));
+	 //log(concat("==============> dans IN ",stepPath));
 }
 
 function OUT(entrySet, colArea, workflow, step, stepPath){  
-	 log(concat("==============> dans OUT ",stepPath));
-	 log(concat("entrySet:",entrySet));
+	 //log(concat("==============> dans OUT ",stepPath));
+	 //log(concat("entrySet:",entrySet));
 	 var oEntry = null;
 	 forEachEntrySetElement(entrySet, oEntry){
 		log(concat("Traitement item: ",oEntry.getPrimaryKey()));
