@@ -139,11 +139,11 @@ function getValidUOs(item, entrynode) {
 	var specName = item.getEntryContainer().getCtgSpec().getSpecName();
 	var entryNodes = item.getRootEntryNode().getEntryNodes(specName+"/ETABLISSEMENTS/ID_ETABLISSEMENT");
 	for (var i=0; i<entryNodes.size(); i++) {
-		var values = [];
-		values["SpecLkp_NewRef_UO/LIB_ETAB_RATTACHEMENT"] = item.getEntryRelatedItemInfo(entryNodes[i].getEntryNodeValue())[1];
-		res = lkpUOs.getKeysFromValues(values);
-//		res.add(item.getEntryRelatedItemInfo(entryNodes[i].getEntryNodeValue())[1]);
-		
+		if (entryNodes[i].getEntryNodeValue() != null) {
+			var values = [];
+			values["SpecLkp_NewRef_UO/LIB_ETAB_RATTACHEMENT"] = item.getEntryRelatedItemInfo(entryNodes[i].getEntryNodeValue())[1];
+			res = lkpUOs.getKeysFromValues(values);
+		}	
 	}
 	return res;
 }
@@ -156,4 +156,5 @@ var res;
 //res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("validateCompetenceTrain").invoke(item,err);
 //res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("validateNumeroAgent").invoke(item,err);
 res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("getValidUOs").invoke(item,entrynode);
+//res =  item.getEntryAttrib(entrynode.getEntryNodeExactPath().replace("_Filtered",""));
 out.writeln( "RESULT" + res );
