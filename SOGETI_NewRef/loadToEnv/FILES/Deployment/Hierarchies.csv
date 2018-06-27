@@ -1,6 +1,0 @@
-CS?,Hierarchy Name,Spec,Inherit?,Display Attribute,Path Attribute,ACG,Org?,Scripts
-
-,H_000_Generique,SpecHier_000_Generique,no,SpecHier_000_Generique/Libellé,SpecHier_000_Generique/Clé,ACG_Metier,,
-
-,Hiérarchie par ID Agent,SpecHier_AgentID,no,SpecHier_AgentID/ID_AGENT,SpecHier_AgentID/ID_AGENT,ACG_Metier,,
-,Hiérarchie par Nom Agent,SpecHier_AgentNOM,no,SpecHier_AgentNOM/NOM,SpecHier_AgentNOM/NOM,ACG_Metier,,

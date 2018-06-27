@@ -1,6 +1,0 @@
-﻿,Spec Name,Spec Type,Attribute Path,Attribute Type,PK?,Idx?,Lcl?,Lnk?,Min,Max,Edit?,NP?,Default,Length,Hidden?,RULE,en_US DisplayName,fr_FR DisplayName
-,,,,,,,,,,,,,,,,,,
-,Dummy_File_Spec,FILE_SPEC,Dummy,STRING,no,no,no,,0,1,yes,,,20,no,,Dummy file spec,Dummy
-,Dummy_Spec,PRIMARY_SPEC,Code,STRING,yes,yes,,,1,1,,,,100,,,Code,Code
-,ExportDest,MKT_SPEC,Dummy,STRING,no,no,no,,0,1,yes,,,20,no,,Dummy export spec,Dummy
-,,,,,,,,,,,,,,,,,,

@@ -148,6 +148,13 @@ function getValidUOs(item, entrynode) {
 	return res;
 }
 
+function getUOlib(item, entrynode){
+//res = getScriptByPath("scripts/triggers/Validation_Rules").getFunctionByName("getUOlib").invoke(item,entrynode);
+	var sIdUO = entrynode.getEntryNodeParent().getEntryNode("ID_UO_Filtered").getEntryNodeValue();
+	//var lkpUOs = getLkpByName("Lkp_NewRef_UO");
+	return lookup("Lkp_NewRef_UO",sIdUO,"LIB_UO");
+}
+
 
 var ctg = getCtgByName("NewRef_Agent");
 var item = ctg.getCtgItemByPrimaryKey("5611978C");
