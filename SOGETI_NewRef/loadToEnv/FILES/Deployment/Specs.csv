@@ -38,7 +38,7 @@ CS?,Spec Name,Spec Type,Attribute Path,Attribute Type,PK?,Idx?,Lcl?,Lnk?,Min,Max
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,POSITIONS/CODE_POSITION,INTEGER,,yes,,,,,,,,10,,,"Code Position"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,POSITIONS/DD_POSITION,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Début Position"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,POSITIONS/DF_POSITION,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Fin Position"
-,SpecCtg_NewRef_Agent,PRIMARY_SPEC,CODE_ECHELON_ACTUEL,INTEGER,,no,,,,,,,,10,,,"Code Echelon Actuel"
+,SpecCtg_NewRef_Agent,PRIMARY_SPEC,CODE_ECHELON_ACTUEL,INTEGER,,yes,,,,,,,,10,,,"Code Echelon Actuel"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ECHELONS,GROUPING,,,,,0,50,,,,,,,"Liste d'Echelons"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ECHELONS/CODE_ECHELON,INTEGER,,yes,,,,,,,,10,,,"Code Echelon"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ECHELONS/DD_ECHELON,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Début Echelon"
@@ -78,6 +78,7 @@ CS?,Spec Name,Spec Type,Attribute Path,Attribute Type,PK?,Idx?,Lcl?,Lnk?,Min,Max
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,COMPETENCES_TRACTION/DD_COMPETENCE_TRACTION,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Début Compétence Traction"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,COMPETENCES_TRACTION/DF_COMPETENCE_TRACTION,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Fin Compétence Traction"
 
+,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ID_ETABLISSEMENT_ACTUEL,INTEGER,,yes,,,,,,,,10,,,"Id Etablissement Actuel"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ETABLISSEMENTS,GROUPING,,,,,0,50,,,,,,,"Liste d'Etablissements"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ETABLISSEMENTS/ID_ETABLISSEMENT,RELATIONSHIP,,yes,,,,,,,,,,,"Id Etablissement"
 ,SpecCtg_NewRef_Agent,PRIMARY_SPEC,ETABLISSEMENTS/DD_ETABLISSEMENT,DATE,,,,,,,,,,,,"DATEONLY|TRUE~=~DATE_FORMAT|dd/MM/yyyy","Date Début Etablissement"
