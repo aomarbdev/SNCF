@@ -7,6 +7,10 @@ Script path (relative to loadToEnv),Script name,Script type,File spec / Destinat
 
 /scripts/entry_build/EntryBuildCtg_Agents.wpcs,EntryBuildCtg_Agents,ENTRY_BUILD,,,UTF-8,,NewRef_Agent,CATALOG
 
+/scripts/entry_preview/ExportCSVEtablissementAgents.wpcs,ExportCSVEtablissementAgents,ENTRY_PREVIEW,,,UTF-8,,NewRef_Etablissement,CATALOG
+/scripts/entry_preview/ExportEtablissementAgents.wpcs,ExportEtablissementAgents,ENTRY_PREVIEW,,,UTF-8,,NewRef_Etablissement,CATALOG
+/scripts/entry_preview/Liste Agents.wpcs,Liste Agents,ENTRY_PREVIEW,,,UTF-8,,NewRef_Agent,CATALOG
+
 /scripts/catalog/PostProcCtg_Agents.wpcs,PostProcCtg_Agents,CTG,,,UTF-8,,NewRef_Agent,CATALOG
 
 /scripts/triggers/Library_Import.wpcs,Library_Import,TRIGGER,,,UTF-8,,,

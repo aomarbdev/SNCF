@@ -1,0 +1,3 @@
+//20180629 IBM - ExportEtablissementAgents
+
+getScriptByPath("/scripts/entry_preview/ExportCSVEtablissementAgents").getFunctionByName("exportEntrySet").invoke(entrySet,"HTML");

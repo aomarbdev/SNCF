@@ -1,0 +1,127 @@
+//20180629 IBM - ExportCSVEtablissementAgents
+
+//@param oItemAgent item agent
+//@param hmAttribs hm attributs a exporter
+//@param oWriter writer
+//@param sMode CSV or HTML
+function exportAgent(oItemAgent,hmAttribs,sMode,oWriter){
+	var sItemLine = "";
+	if(sMode != "CSV"){
+		out.writeln(concat("<hr/><br/><b>Agent ",oItemAgent.getPrimaryKey(),"</b><br/>"));
+	}
+	for(var j=0; j<hmAttribs.size(); j++){
+		//var node = ctgAgent.getCatalogSpec().getNodeByPath("SpecCtg_NewRef_Agent/" + listeAttributs[j]);
+		var sAttribName = hmAttribs[j];
+		var sNodePath = concat("SpecCtg_NewRef_Agent/" ,sAttribName);
+		var sAttribValue = "";
+		var sErr="";
+		catchError(sErr){
+			sAttribValue = oItemAgent.getEntryAttrib(sNodePath);
+		}
+		if(sErr != ""){
+			getLogger("Preview").loggerInfo(concat("Attribut introuvable ",sNodePath));
+		}
+		if(sMode == "CSV"){
+			sItemLine = sItemLine + sAttribValue;
+			if(j < hmAttribs.size()-1){
+				sItemLine = sItemLine + ";";
+			}
+		}else{//HTML
+			var oNode = getSpecByName("SpecCtg_NewRef_Agent").getNodeByPath(sNodePath);
+			var sDisplay = sAttribName;
+			if(oNode != null){
+				sDisplay = oNode.getNodeDisplayName(new Locale("fr","FR"));
+			}
+			if(sAttribName != "ID_AGENT"){
+				out.writeln(concat("&emsp;",sDisplay," : ",sAttribValue,"<br/>"));
+			}
+		}
+	}
+	if(sMode == "CSV"){
+		oWriter.writeln(sItemLine);
+	}
+}
+			
+//@param oItmEtab item etablissement
+//@param sMode CSV or HTML
+function exportEtablissement(oItmEtab,sMode){
+	var pkEtablissement = oItmEtab.getPrimaryKey();
+	var trigramme = checkString( oItmEtab.getEntryAttrib("/SpecCtg_NewRef_Etablissement/TRIGRAMME_ETABLISSEMENT") ,pkEtablissement) ;
+	var nomFichier = concat("exports_csv/exportEtablissement_" , trigramme ,".csv");
+	var oWriter;
+	if(sMode == "CSV"){
+		var oDoc = getDocByPath(nomFichier);
+		if(oDoc != null){
+			oDoc.deleteDoc();
+		}
+		oWriter = createOtherOut(nomFichier);
+	}else{
+		out.writeln(concat("<hr/><br/><center><b>Etablissement ",oItmEtab.getPrimaryKey()," ",oItmEtab.getDisplayValue(),"</b></center><br/><br/>"));
+	}
+	var sAttr = "";
+	// Entete
+	var listeAttributs = [];
+	listeAttributs.add("ID_AGENT");
+	listeAttributs.add("NOM");
+	listeAttributs.add("PRENOM");
+	listeAttributs.add("REGIME_TRAVAIL");
+	listeAttributs.add("ASSERMENTATION");
+	//listeAttributs.add("DD_PRODUCTION");
+	//listeAttributs.add("NUM_RECETTE");
+	listeAttributs.add("POINT_DE_VENTE");
+	listeAttributs.add("TEL_COMPLEMENTAIRE");
+	listeAttributs.add("GRADE_ACTUEL");
+	if(listeAttributs != null && listeAttributs.size() > 0){
+		for(var j=0; j<listeAttributs.size(); j++){
+			sAttr = sAttr + listeAttributs[j];
+			if(j < listeAttributs.size()-1){
+				sAttr = sAttr + ";";
+			}
+		}
+	}
+	if(sMode == "CSV"){
+		oWriter.writeln(sAttr);
+	}
+	//Data
+	var ctgAgent= getCtgByName("NewRef_Agent");  
+	var itemSetAgent = ctgAgent.getItemSetForCatalog();
+	var itemAgent = null;
+	forEachItemSetElement(itemSetAgent, itemAgent){ 
+		var bFound = false;
+		var nbGrp = itemAgent.getRootEntryNode().getEntryNode("SpecCtg_NewRef_Agent/ETABLISSEMENTS").getEntryNodeChildren().size();
+		for(var i=0;i<nbGrp;i++){
+			var hmRel = itemAgent.getEntryRelationshipAttrib(concat("SpecCtg_NewRef_Agent/ETABLISSEMENTS#",i,"/ID_ETABLISSEMENT"));
+			if(hmRel != null && hmRel.size() > 0 ){
+				var pkRel = hmRel[1];
+				if(pkEtablissement == pkRel){
+					bFound=true;
+				}
+			}
+		}
+		if(bFound){
+			exportAgent(itemAgent,listeAttributs,sMode,oWriter);
+		}				
+	}
+	if(sMode == "CSV"){
+		oWriter.save(nomFichier);
+	}
+	return nomFichier;
+}
+
+
+//@param entrySet entrySet
+//@param sMode CSV or HTML
+function exportEntrySet(entrySet,sMode){
+	var oItmEtab;
+	forEachEntrySetElement(entrySet, oItmEtab) {
+		var sNomFichier = exportEtablissement(oItmEtab,sMode);
+		if(sMode == "CSV"){
+			var sUrl = getHrefForDocPath(sNomFichier);
+			var sHtml = concat("Export termniné : <a href=\"",sUrl,"\" target=\"_blank\">",sNomFichier,"</a><br/>");
+			out.writeln(sHtml);
+			getLogger("Preview").loggerInfo(sUrl);
+		}
+	}
+}
+
+exportEntrySet(entrySet,"CSV");
