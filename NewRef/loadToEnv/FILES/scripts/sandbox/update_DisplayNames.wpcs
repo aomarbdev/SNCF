@@ -1,0 +1,44 @@
+
+//@param o object to log
+function log(o){
+	out.writeln(""+o); 
+	getLogger("Sandbox").loggerInfo(""+o);
+}
+//@param sSpec spec
+//@param sAttribPath path
+//@param sNewName display name
+function changeName(sSpec,sAttribPath,sNewName){
+	if(sSpec != "" && sAttribPath != "" && sNewName != ""){
+		var oSpec =  getSpecByName(sSpec, false);//get mutable spec 
+		if(oSpec != null){
+			var sNodePath = concat(sSpec,"/",sAttribPath);
+			var oNode = oSpec.getNodeByPath(sNodePath); 
+			if(oNode != null){
+				oNode.setAttribute("fr_FR_display_name", sNewName); 
+				oSpec.saveSpec();
+			}else{
+				log(concat("Spec node not found : ",sNodePath));
+			}
+		}else{
+			log(concat("Spec not found : ",sSpec));
+		}
+	}
+}
+//@param oFeed feed
+function readSpecsCsv(oFeed){
+	log("Start");
+	var oReader = new CSVParser(oFeed);
+	var hmLine = oReader.splitLine();//header
+	hmLine = oReader.splitLine();//1st data line
+	while(hmLine != null){
+		var sSpecName = checkString(hmLine[1],"");
+		var sAttribPath = checkString(hmLine[3],"");
+		var sDisplayName = checkString(hmLine[17],"");
+		log(concat("Setting display name for ",sSpecName," / ",sAttribPath," to ",sDisplayName));
+		changeName(sSpecName,sAttribPath,sDisplayName);
+		hmLine = oReader.splitLine();
+	}
+	log("Done");
+}
+//Run
+readSpecsCsv(in);
