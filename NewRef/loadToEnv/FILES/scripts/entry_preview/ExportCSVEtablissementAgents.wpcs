@@ -116,7 +116,7 @@ function exportEntrySet(entrySet,sMode){
 	forEachEntrySetElement(entrySet, oItmEtab) {
 		var sNomFichier = exportEtablissement(oItmEtab,sMode);
 		if(sMode == "CSV"){
-			var sUrl = getHrefForDocPath(sNomFichier);
+			var sUrl = concat("http://10.145.132.231:7507",getHrefForDocPath(sNomFichier));
 			var sHtml = concat("Export termniné : <a href=\"",sUrl,"\" target=\"_blank\">",sNomFichier,"</a><br/>");
 			out.writeln(sHtml);
 			getLogger("Preview").loggerInfo(sUrl);
